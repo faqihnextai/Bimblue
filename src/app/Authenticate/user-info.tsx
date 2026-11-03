@@ -2,9 +2,14 @@
  * 08 — Informasi Pengguna
  */
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import {
+  AuthBackdrop,
+  AuthPrimaryButton,
+  AuthTextField,
+} from '../../components/authenticate/AuthControls';
 
 const SCHOOL_LEVELS = ['SD', 'SMP', 'SMA / SMK', 'Perguruan Tinggi'];
 const GENDERS = ['Laki-laki', 'Perempuan'];
@@ -20,8 +25,8 @@ export default function UserInfoScreen() {
   return (
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <StatusBar style="dark" />
+      <AuthBackdrop />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        <View style={styles.blobBlue} />
         <View style={styles.progressRow}>
           <View style={styles.progressDone} /><View style={styles.progressDone} /><View style={styles.progressDone} /><View style={styles.progressActive} />
         </View>
@@ -33,11 +38,11 @@ export default function UserInfoScreen() {
         <View style={styles.form}>
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Nama Lengkap</Text>
-            <View style={styles.inputWrapper}><TextInput style={styles.input} value={fullName} onChangeText={setFullName} placeholder="Nama sesuai dokumen resmi" placeholderTextColor="#9CA3AF" autoCapitalize="words" /></View>
+            <AuthTextField value={fullName} onChangeText={setFullName} placeholder="Nama sesuai dokumen resmi" autoCapitalize="words" />
           </View>
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Tanggal Lahir</Text>
-            <View style={styles.inputWrapper}><TextInput style={styles.input} value={birthDate} onChangeText={setBirthDate} placeholder="DD/MM/YYYY" placeholderTextColor="#9CA3AF" keyboardType="numeric" maxLength={10} /></View>
+            <AuthTextField value={birthDate} onChangeText={setBirthDate} placeholder="DD/MM/YYYY" keyboardType="numeric" maxLength={10} />
           </View>
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Jenis Kelamin</Text>
@@ -68,9 +73,11 @@ export default function UserInfoScreen() {
             )}
           </View>
         </View>
-        <TouchableOpacity style={[styles.primaryBtn, !canSubmit && styles.primaryBtnDisabled]} onPress={() => canSubmit && router.replace('/Authenticate/motivation-splash')} disabled={!canSubmit} activeOpacity={0.85}>
-          <Text style={styles.primaryBtnText}>Selesaikan Pendaftaran</Text>
-        </TouchableOpacity>
+        <AuthPrimaryButton
+          label="Selesaikan Pendaftaran"
+          onPress={() => router.replace('/before/motivation-splash')}
+          disabled={!canSubmit}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );

@@ -2,9 +2,17 @@
  * 05 — Login / Bimblue
  */
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { BimblueBrand } from '../../components/authenticate/AuthBrand';
+import {
+  AuthBackdrop,
+  AuthGoogleButton,
+  AuthPasswordField,
+  AuthPrimaryButton,
+  AuthTextField,
+} from '../../components/authenticate/AuthControls';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -14,56 +22,56 @@ export default function LoginScreen() {
 
   const handleLogin = () => {
     setLoading(true);
-    setTimeout(() => { setLoading(false); router.replace('/motivation-splash'); }, 1000);
+    setTimeout(() => { setLoading(false); router.replace('/before/motivation-splash'); }, 1000);
   };
 
   return (
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <StatusBar style="dark" />
+      <AuthBackdrop />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        <View style={styles.blobBlue} />
-        <View style={styles.blobMint} />
         <View style={styles.logoRow}>
-          <View style={styles.logoIcon}><Text style={styles.logoLetter}>B</Text></View>
-          <Text style={styles.logoText}>Bimblue</Text>
+          <BimblueBrand />
         </View>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Selamat datang kembali 👋</Text>
           <Text style={styles.cardSubtitle}>Masuk untuk melanjutkan perjalanan belajarmu.</Text>
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="contoh@email.com" placeholderTextColor="#9CA3AF" keyboardType="email-address" autoCapitalize="none" />
-            </View>
-          </View>
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Kata Sandi</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput style={[styles.input, styles.inputPr]} value={password} onChangeText={setPassword} placeholder="Masukkan kata sandi" placeholderTextColor="#9CA3AF" secureTextEntry={!showPassword} autoCapitalize="none" />
-              <Pressable onPress={() => setShowPassword(v => !v)} style={styles.eyeBtn} hitSlop={8}>
-                <Text style={styles.eyeIcon}>{showPassword ? '🙈' : '👁️'}</Text>
-              </Pressable>
-            </View>
-          </View>
+          <AuthTextField
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="contoh@email.com"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <AuthPasswordField
+            label="Kata Sandi"
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Masukkan kata sandi"
+            visible={showPassword}
+            onToggle={() => setShowPassword((visible) => !visible)}
+          />
           <TouchableOpacity style={styles.forgotRow} onPress={() => router.push('/Authenticate/forgot-password')}>
             <Text style={styles.forgotText}>Lupa kata sandi?</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.primaryBtn, loading && styles.primaryBtnLoading]} onPress={handleLogin} disabled={loading} activeOpacity={0.85}>
-            <Text style={styles.primaryBtnText}>{loading ? 'Memuat...' : 'Masuk'}</Text>
-          </TouchableOpacity>
+          <AuthPrimaryButton label="Masuk" onPress={handleLogin} loading={loading} />
           <View style={styles.dividerRow}>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>atau</Text>
             <View style={styles.dividerLine} />
           </View>
-          <TouchableOpacity style={styles.googleBtn} activeOpacity={0.85}>
-            <Text style={styles.googleIcon}>G</Text>
-            <Text style={styles.googleBtnText}>Lanjutkan dengan Google</Text>
-          </TouchableOpacity>
+          <AuthGoogleButton theme="light" label="Lanjutkan dengan Google" />
           <View style={styles.registerRow}>
             <Text style={styles.registerPrompt}>Belum punya akun? </Text>
             <TouchableOpacity onPress={() => router.push('/Authenticate/register')}>
               <Text style={styles.registerLink}>Daftar sekarang</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.registerRow}>
+            <Text style={styles.registerPrompt}>Pengajar? </Text>
+            <TouchableOpacity onPress={() => router.push('/Authenticate/admin/register')}>
+              <Text style={styles.registerLink}>Daftar Teach Blue</Text>
             </TouchableOpacity>
           </View>
         </View>

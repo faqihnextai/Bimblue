@@ -9,7 +9,7 @@ import { StatusBar } from 'expo-status-bar';
 export default function SplashScreen() {
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace('/onboarding'); // <-- Ubah bagian ini
+      router.replace('/before/onboarding');
     }, 2500);
     return () => clearTimeout(timer);
   }, []);

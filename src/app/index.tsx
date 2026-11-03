@@ -6,5 +6,5 @@ import { Redirect } from 'expo-router';
  * After successful login/register, Authenticate screens will navigate to the main app.
  */
 export default function Index() {
-  return <Redirect href="/splash" />;
+  return <Redirect href="/before/splash" />;
 }

@@ -2,9 +2,15 @@
  * 10 — Lupa Sandi / Email
  */
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import {
+  AuthBackdrop,
+  AuthIconCard,
+  AuthPrimaryButton,
+  AuthTextField,
+} from '../../components/authenticate/AuthControls';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
@@ -13,25 +19,28 @@ export default function ForgotPasswordScreen() {
   return (
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <StatusBar style="dark" />
+      <AuthBackdrop />
       <View style={styles.container}>
-        <View style={styles.blobBlue} />
-        <View style={styles.blobMint} />
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
           <Text style={styles.backText}>← Kembali ke Masuk</Text>
         </TouchableOpacity>
         <View style={styles.content}>
-          <View style={styles.iconBox}><Text style={styles.iconEmoji}>🔑</Text></View>
+          <AuthIconCard icon="🔑" />
           <Text style={styles.title}>Lupa Kata Sandi?</Text>
           <Text style={styles.subtitle}>Masukkan email yang terdaftar dan kami akan mengirimkan kode verifikasi untuk mengatur ulang kata sandi kamu.</Text>
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Email Terdaftar</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="contoh@email.com" placeholderTextColor="#9CA3AF" keyboardType="email-address" autoCapitalize="none" />
-            </View>
-          </View>
-          <TouchableOpacity style={[styles.primaryBtn, !isValid && styles.primaryBtnDisabled]} onPress={() => isValid && router.push({ pathname: '/Authenticate/forgot-password-otp', params: { email } })} disabled={!isValid} activeOpacity={0.85}>
-            <Text style={styles.primaryBtnText}>Kirim Kode Verifikasi</Text>
-          </TouchableOpacity>
+          <AuthTextField
+            label="Email Terdaftar"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="contoh@email.com"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <AuthPrimaryButton
+            label="Kirim Kode Verifikasi"
+            onPress={() => router.push({ pathname: '/Authenticate/forgot-password-otp', params: { email } })}
+            disabled={!isValid}
+          />
         </View>
       </View>
     </KeyboardAvoidingView>

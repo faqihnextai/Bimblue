@@ -1,35 +1,28 @@
 /**
  * 11 — Lupa Sandi / OTP
  */
-import { useRef, useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import {
+  AuthBackdrop,
+  AuthOtpField,
+  AuthPrimaryButton,
+} from '../../components/authenticate/AuthControls';
 
 const OTP_LENGTH = 6;
 
 export default function ForgotPasswordOtpScreen() {
   const { email } = useLocalSearchParams<{ email?: string }>();
   const displayEmail = email ?? 'kamu@email.com';
-  const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(''));
-  const inputs = useRef<Array<TextInput | null>>(Array(OTP_LENGTH).fill(null));
-  const isComplete = digits.every(d => d.length === 1);
-
-  const handleDigit = (text: string, index: number) => {
-    const cleaned = text.replace(/\D/g, '').slice(-1);
-    const newDigits = [...digits];
-    newDigits[index] = cleaned;
-    setDigits(newDigits);
-    if (cleaned && index < OTP_LENGTH - 1) inputs.current[index + 1]?.focus();
-  };
-
-  const handleKeyPress = (key: string, index: number) => {
-    if (key === 'Backspace' && !digits[index] && index > 0) inputs.current[index - 1]?.focus();
-  };
+  const [code, setCode] = useState('');
+  const isComplete = code.length === OTP_LENGTH;
 
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
+      <AuthBackdrop />
       <View style={styles.blobBlue} />
       <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
         <Text style={styles.backText}>← Kembali</Text>
@@ -40,25 +33,14 @@ export default function ForgotPasswordOtpScreen() {
         <Text style={styles.subtitle}>Kode verifikasi telah dikirim ke</Text>
         <Text style={styles.emailHighlight}>{displayEmail}</Text>
         <View style={styles.otpRow}>
-          {digits.map((digit, i) => (
-            <TextInput
-              key={i}
-              ref={(el: TextInput | null) => { inputs.current[i] = el; }}
-              style={[styles.digitInput, digit ? styles.digitInputFilled : undefined]}
-              value={digit}
-              onChangeText={t => handleDigit(t, i)}
-              onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, i)}
-              keyboardType="number-pad"
-              maxLength={1}
-              textAlign="center"
-              selectTextOnFocus
-            />
-          ))}
+          <AuthOtpField value={code} onChangeText={setCode} length={OTP_LENGTH} />
         </View>
         <Text style={styles.resendCountdown}>⏱ Kirim ulang dalam 60s</Text>
-        <TouchableOpacity style={[styles.primaryBtn, !isComplete && styles.primaryBtnDisabled]} onPress={() => isComplete && router.push('/Authenticate/reset-password')} disabled={!isComplete} activeOpacity={0.85}>
-          <Text style={styles.primaryBtnText}>Lanjutkan</Text>
-        </TouchableOpacity>
+        <AuthPrimaryButton
+          label="Lanjutkan"
+          onPress={() => router.push('/Authenticate/reset-password')}
+          disabled={!isComplete}
+        />
       </View>
     </View>
   );

@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="112" height="112" viewBox="0 0 112 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Simbol keluarga Bimblue">
+<rect width="112" height="112" rx="34" fill="#2563EB"/>
+<circle id="Percikan belajar" cx="75" cy="27" r="6" fill="#21C461"/>
+<path id="Halaman buku" d="M31 44.5H45C47.4853 44.5 49.5 46.5147 49.5 49V70C49.5 72.4853 47.4853 74.5 45 74.5H31C28.5147 74.5 26.5 72.4853 26.5 70V49C26.5 46.5147 28.5147 44.5 31 44.5Z" fill="#0F2A5B" stroke="#2563EB"/>
+<path id="Halaman buku_2" d="M57 44.5H71C73.4853 44.5 75.5 46.5147 75.5 49V70C75.5 72.4853 73.4853 74.5 71 74.5H57C54.5147 74.5 52.5 72.4853 52.5 70V49C52.5 46.5147 54.5147 44.5 57 44.5Z" fill="#0F2A5B" stroke="#2563EB"/>
+<rect id="Punggung buku" x="50" y="44" width="4" height="31" rx="2" fill="#21C461"/>
+</g>
+</svg>

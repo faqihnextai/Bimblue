@@ -8,7 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 
 export default function MotivationSplashScreen() {
   useEffect(() => {
-    const timer = setTimeout(() => router.replace('/'), 2500);
+    const timer = setTimeout(() => router.replace('/explore'), 2500);
     return () => clearTimeout(timer);
   }, []);
 

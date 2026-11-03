@@ -2,18 +2,20 @@
  * 06 — Registrasi / Bimblue
  */
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
-function PasswordRule({ met, label }: { met: boolean; label: string }) {
-  return (
-    <View style={styles.ruleRow}>
-      <Text style={[styles.ruleDot, met ? styles.ruleMet : styles.ruleUnmet]}>{met ? '✓' : '○'}</Text>
-      <Text style={[styles.ruleLabel, met ? styles.ruleLabelMet : styles.ruleLabelUnmet]}>{label}</Text>
-    </View>
-  );
-}
+import { BimblueBrand } from '../../components/authenticate/AuthBrand';
+import {
+  AuthBackdrop,
+  AuthDivider,
+  AuthGoogleButton,
+  AuthPasswordField,
+  AuthPrimaryButton,
+  AuthTextField,
+  PasswordRuleList,
+} from '../../components/authenticate/AuthControls';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -32,59 +34,35 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <StatusBar style="dark" />
+      <AuthBackdrop />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        <View style={styles.blobBlue} />
         <View style={styles.header}>
           <View style={styles.logoRow}>
-            <View style={styles.logoIcon}><Text style={styles.logoLetter}>B</Text></View>
-            <Text style={styles.logoText}>Bimblue</Text>
+            <BimblueBrand />
           </View>
           <Text style={styles.pageTitle}>Buat akun baru</Text>
           <Text style={styles.pageSubtitle}>Daftar dan mulai perjalanan belajarmu hari ini.</Text>
         </View>
-        <TouchableOpacity style={styles.googleBtn} activeOpacity={0.85}>
-          <Text style={styles.googleIcon}>G</Text>
-          <Text style={styles.googleBtnText}>Daftar dengan Google</Text>
-        </TouchableOpacity>
-        <View style={styles.dividerRow}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>atau daftar dengan email</Text>
-          <View style={styles.dividerLine} />
-        </View>
+        <AuthGoogleButton theme="light" label="Daftar dengan Google" />
+        <AuthDivider label="atau daftar dengan email" />
         <View style={styles.form}>
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Nama Lengkap</Text>
-            <View style={styles.inputWrapper}><TextInput style={styles.input} value={name} onChangeText={setName} placeholder="Nama lengkapmu" placeholderTextColor="#9CA3AF" autoCapitalize="words" /></View>
-          </View>
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.inputWrapper}><TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="contoh@email.com" placeholderTextColor="#9CA3AF" keyboardType="email-address" autoCapitalize="none" /></View>
-          </View>
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Kata Sandi</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput style={[styles.input, styles.inputPr]} value={password} onChangeText={setPassword} placeholder="Buat kata sandi" placeholderTextColor="#9CA3AF" secureTextEntry={!showPassword} autoCapitalize="none" />
-              <Pressable onPress={() => setShowPassword(v => !v)} style={styles.eyeBtn} hitSlop={8}><Text style={styles.eyeIcon}>{showPassword ? '🙈' : '👁️'}</Text></Pressable>
-            </View>
-          </View>
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Konfirmasi Kata Sandi</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput style={[styles.input, styles.inputPr]} value={confirmPassword} onChangeText={setConfirmPassword} placeholder="Ulangi kata sandi" placeholderTextColor="#9CA3AF" secureTextEntry={!showConfirm} autoCapitalize="none" />
-              <Pressable onPress={() => setShowConfirm(v => !v)} style={styles.eyeBtn} hitSlop={8}><Text style={styles.eyeIcon}>{showConfirm ? '🙈' : '👁️'}</Text></Pressable>
-            </View>
-          </View>
+          <AuthTextField label="Nama Lengkap" value={name} onChangeText={setName} placeholder="Nama lengkapmu" autoCapitalize="words" />
+          <AuthTextField label="Email" value={email} onChangeText={setEmail} placeholder="contoh@email.com" keyboardType="email-address" autoCapitalize="none" />
+          <AuthPasswordField label="Kata Sandi" value={password} onChangeText={setPassword} placeholder="Buat kata sandi" visible={showPassword} onToggle={() => setShowPassword((visible) => !visible)} />
+          <AuthPasswordField label="Konfirmasi Kata Sandi" value={confirmPassword} onChangeText={setConfirmPassword} placeholder="Ulangi kata sandi" visible={showConfirm} onToggle={() => setShowConfirm((visible) => !visible)} />
           {password.length > 0 && (
-            <View style={styles.validationBox}>
-              <PasswordRule met={hasMinLength} label="Minimal 8 karakter" />
-              <PasswordRule met={hasUpper} label="Mengandung huruf kapital" />
-              <PasswordRule met={hasNumber} label="Mengandung angka" />
-              <PasswordRule met={passwordsMatch} label="Kata sandi cocok" />
-            </View>
+            <PasswordRuleList rules={[
+              { met: hasMinLength, label: 'Minimal 8 karakter' },
+              { met: hasUpper, label: 'Mengandung huruf kapital' },
+              { met: hasNumber, label: 'Mengandung angka' },
+              { met: passwordsMatch, label: 'Kata sandi cocok' },
+            ]} />
           )}
-          <TouchableOpacity style={[styles.primaryBtn, !canSubmit && styles.primaryBtnDisabled]} onPress={() => canSubmit && router.push('/Authenticate/otp-verification')} disabled={!canSubmit} activeOpacity={0.85}>
-            <Text style={styles.primaryBtnText}>Daftar Sekarang</Text>
-          </TouchableOpacity>
+          <AuthPrimaryButton
+            label="Daftar Sekarang"
+            onPress={() => router.push('/Authenticate/otp-verification')}
+            disabled={!canSubmit}
+          />
           <View style={styles.loginRow}>
             <Text style={styles.loginPrompt}>Sudah punya akun? </Text>
             <TouchableOpacity onPress={() => router.back()}><Text style={styles.loginLink}>Masuk</Text></TouchableOpacity>
