@@ -1,28 +1,45 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
+// src/app/_layout.tsx (Root Layout Utama)
+import { useEffect } from 'react';
+import { useFonts, Nunito_400Regular, Nunito_700Bold } from '@expo-google-fonts/nunito';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
-import { useEffect } from 'react'; // 1. Tambahkan import ini
 
-SplashScreen.preventAutoHideAsync();
+// Mencegah splash native hilang sebelum font siap
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [fontsLoaded, fontError] = useFonts({
+    Nunito_400Regular,
+    Nunito_700Bold,
+  });
 
-  // 2. Tambahkan useEffect ini untuk menyembunyikan native splash screen
   useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
+    // Sembunyikan splash native begitu font siap ATAU jika font error (agar tidak stuck)
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="before" />
-        
-        <Stack.Screen name="Authenticate" />
-        <Stack.Screen name="explore" />
-      </Stack>
-    </ThemeProvider>
+    <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+      {/* 1. File index.tsx (Pintu Gerbang Masuk) */}
+      <Stack.Screen name="index" />
+
+      {/* 2. Folder before (Splash, Onboarding, Motivation) */}
+      <Stack.Screen name="before" />
+
+      {/* 3. Folder Authenticate (Login, Register, Validasi) */}
+      <Stack.Screen name="Authenticate" />
+
+      {/* 4. Folder Dashboard (User & Admin) */}
+      <Stack.Screen name="Dashboard" />
+
+      {/* 5. Layar template explore (jika masih ada) */}
+      <Stack.Screen name="explore" />
+    </Stack>
   );
 }

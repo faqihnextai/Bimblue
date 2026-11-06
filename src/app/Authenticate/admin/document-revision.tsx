@@ -24,7 +24,7 @@ export default function TeachBlueDocumentRevisionScreen() {
   const resubmit = () => {
     if (!replacement) return;
     router.replace({
-      pathname: '/Authenticate/admin/pending-validation',
+      pathname: '/Authenticate/admin/validated',
       params: { applicantType: 'individual' },
     });
   };

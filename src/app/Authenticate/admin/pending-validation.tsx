@@ -1,4 +1,5 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import ReviewIllustration from '../../../../assets/images/teach-blue/review-illustration.svg';
@@ -16,6 +17,18 @@ import { authColors } from '../../../components/authenticate/theme';
 export default function TeachBluePendingScreen() {
   const { applicantType } = useLocalSearchParams<{ applicantType?: string }>();
   const organization = applicantType === 'institution';
+
+  // Timer 5 detik sebelum otomatis berpindah ke step peninjauan / revisi dokumen
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.replace({
+        pathname: '/Authenticate/admin/document-revision',
+        params: { applicantType: applicantType || 'individual' },
+      });
+    }, 5000); // 5000 ms = 5 detik
+
+    return () => clearTimeout(timer);
+  }, [applicantType]);
 
   return (
     <TeachBlueScreen contentStyle={styles.content}>
@@ -57,7 +70,7 @@ export default function TeachBluePendingScreen() {
         </View>
       </TeachBlueCard>
       <TeachBlueFooter />
-    </TeachBlueScreen>
+</TeachBlueScreen>
   );
 }
 
